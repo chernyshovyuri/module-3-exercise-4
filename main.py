@@ -61,10 +61,34 @@ class Student:
         return self.__gpa >= other.gpa
 
 
+student = Student('James', 'Smith', 42, 42)
+print(student)
+print('='*20)
+
+print(student.get_name())
+print('='*20)
+print(student.get_surname())
+print('='*20)
+print(student.get_age())
+print('='*20)
+print(student.get_gpa())
+print('='*20)
+
+student_2 = Student('Bob', 'Terminator', 300, 99)
 
 
 
+student_2.gpa = 85
+print(student_2)
+print('='*20)
+print(student_2.get_gpa())
+print('='*20)
 
+
+print(student > student_2)
+print('='*20)
+print(student >= student_2)
+print('='*20)
 
 
 
