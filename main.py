@@ -43,22 +43,22 @@ class Student:
     gpa = property(get_gpa, set_gpa)
 
     def __eq__(self, other):
-        return self.__gpa == other.gpa
+        return self.__gpa == other.__gpa
 
     def __ne__(self, other):
-        return self.__gpa != other.gpa
+        return self.__gpa != other.__gpa
 
     def __lt__(self, other):
-        return self.__gpa < other.gpa
+        return self.__gpa < other.__gpa
 
     def __gt__(self, other):
-        return self.__gpa > other.gpa
+        return self.__gpa > other.__gpa
 
     def __le__(self, other):
-        return self.__gpa <= other.gpa
+        return self.__gpa <= other.__gpa
 
     def __ge__(self, other):
-        return self.__gpa >= other.gpa
+        return self.__gpa >= other.__gpa
 
 
 student = Student('James', 'Smith', 42, 42)
