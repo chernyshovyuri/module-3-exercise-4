@@ -77,6 +77,9 @@ class HogwardStudent:
     def __str__(self):
         return f"Name: {self.__name}\nFaculty: {self.__faculty}\nMana: {self.__mana}\nspell: {self.__spell}"
 
+    def __repr__(self):
+        return f"{self.__name}"
+
 
     def get_name(self):
         return self.__name
@@ -99,12 +102,6 @@ class HogwardStudent:
 
         return True
 
-    def add_spell(self, new_spell: Spell) -> bool:
-
-        if new_spell not in self.__spell:
-            self.__spell.append(new_spell)
-            return True
-        return False
 
     def cast_spell(self, target: HogwardStudent) -> bool:
 
@@ -119,6 +116,105 @@ class HogwardStudent:
             return True
 
         return False
+
+    @staticmethod
+    def copy_student(original):
+        return HogwardStudent(original.__name, original.__faculty, original.__mana, original.__spell)
+
+
+class Hogwarts:
+
+    __students: list[HogwardStudent]
+    __spells: list[Spell] = None
+
+
+    def __init__(self, students: list[HogwardStudent] = None, spells: list[Spell] = None ) -> None:
+
+
+
+        if not isinstance(students, list):  raise TypeError()
+        if not isinstance(spells, list): raise TypeError()
+
+        self.__students = students or []
+        self.__spells = spells or []
+
+
+    def __str__(self):
+        return f"Students:{self.__students}\nSpells:{self.__spells}"
+
+    def __repr__(self):
+        return f"Students:{self.__students}\nSpells:{self.__spells}"
+
+
+    def get_copy_spells(self) -> list[Spell]:
+
+        copy_spells = []
+
+        for spell in self.__spells:
+            copy_spells.append(Spell.copy_spell(spell))
+
+        return copy_spells
+
+    def get_copy_students(self) -> list[HogwardStudent]:
+
+        copy_students = []
+
+        for student in self.__students:
+            copy_students.append(HogwardStudent.copy_student(student))
+
+        return copy_students
+
+
+
+    def add_student(self, new_student: HogwardStudent) -> bool:
+
+        if new_student not in self.__students:
+            self.__students.append(new_student)
+            return True
+        return False
+
+    def add_spell(self, new_spell: Spell) -> bool:
+
+        if new_spell not in self.__spells:
+            self.__spells.append(new_spell)
+            return True
+
+        return False
+
+    def simulate_duell(self, student_1: HogwardStudent, student_2: HogwardStudent) -> bool:
+
+        if student_1 not in self.__students or student_2 not in self.__students:  return False
+
+        if student_1.get_mana() < 10:  return False
+        if student_2.get_mana() < 10: return False
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

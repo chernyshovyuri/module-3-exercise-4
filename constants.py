@@ -2,6 +2,7 @@
 
 MANANONE = None
 
+PRIMALMANA = 100
 
 
 COST = 20
