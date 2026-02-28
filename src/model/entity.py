@@ -7,21 +7,21 @@ class Spell:
 
     __name: str
     __effect: str
-    __mana: int
+    __potrency: int
 
-    def __init__(self, name: str, effect: str, mana: int = con.MANANONE):
+    def __init__(self, name: str, effect: str, potrency: int = con.MANANONE):
 
         if not isinstance(name, str):  raise TypeError()
         if not isinstance(effect, str): raise TypeError()
-        if not isinstance(mana, (int, float)): raise TypeError()
+        if not isinstance(potrency, (int, float)): raise TypeError()
 
         self.__name = name
         self.__effect = effect
-        self.__mana = mana
+        self.__potrency = potrency
 
 
     def __str__(self):
-        return f'Name:{self.__name}\nEffect:{self.__effect}\nMana:{self.__mana}'
+        return f'Name:{self.__name}\nEffect:{self.__effect}\nMana:{self.__potrency}'
 
     def __repr__(self):
         return f"{self.__name}"
@@ -34,22 +34,22 @@ class Spell:
 
         return self.__effect
 
-    def get_mana(self):
+    def get_potrency(self):
 
-        return self.__mana
+        return self.__potrency
 
-    def set_mana(self, new_mana: int) -> bool:
+    def set_potrency(self, new_mana: int) -> bool:
 
         if new_mana < 0 or new_mana > con.PRIMALMANA:  return False
 
-        self.__mana = new_mana
+        self.__potrency = new_mana
 
         return True
 
 
     @staticmethod
     def copy_spell(original):
-        return Spell(original.__name, original.__effect, original.__mana)
+        return Spell(original.__name, original.__effect, original.__potrency)
 
 
 
@@ -57,25 +57,26 @@ class HogwardStudent:
 
     __name: str
     __faculty: str
-    __mana: int
+    __mana_student: int
     __spell: list[Spell]
 
 
-    def __init__(self, name: str, faculty: str, spell: list[Spell] = None):
+    def __init__(self, name: str, faculty: str, spell: list[Spell] = None, mana_student: int = 100):
 
         if not isinstance(name, str): raise TypeError()
         if not isinstance(faculty, str): raise TypeError()
         if not isinstance(spell, list): raise TypeError()
+        if not isinstance(mana_student, int): raise TypeError()
 
 
         self.__name = name
         self.__faculty = faculty
         self.__spell = spell or []
-        self.__mana = con.PRIMALMANA
+        self.__mana_student = mana_student
 
 
     def __str__(self):
-        return f"Name: {self.__name}\nFaculty: {self.__faculty}\nMana: {self.__mana}\nspell: {self.__spell}"
+        return f"Name: {self.__name}\nFaculty: {self.__faculty}\nMana Student: {self.__mana_student}\nspell: {self.__spell}"
 
     def __repr__(self):
         return f"{self.__name}"
@@ -88,7 +89,7 @@ class HogwardStudent:
         return self.__faculty
 
     def get_mana(self):
-        return self.__mana
+        return self.__mana_student
 
     def get_spell(self):
         return self.__spell
@@ -98,28 +99,29 @@ class HogwardStudent:
 
         if new_mana < 0 or new_mana > con.PRIMALMANA:  return False
 
-        self.__mana = new_mana
+        self.__mana_student = new_mana
 
         return True
 
 
-    def try_cast_spell(self, target: HogwardStudent) -> bool:
+    def cast_spell(self, target: HogwardStudent) -> bool:
 
         if not self.__spell:  return False
 
         random_spell = random.choice(self.__spell)
 
-        new_mana = random_spell.get_mana()
+        new_mana = random_spell.get_potrency()
 
-        if self.__mana >= new_mana:
-            self.__mana -= new_mana
+        if  self.__mana_student >= new_mana:
+            self.__mana_student -= new_mana
             return True
 
         return False
 
+
     @staticmethod
     def copy_student(original):
-        return HogwardStudent(original.__name, original.__faculty, original.__mana, original.__spell)
+        return HogwardStudent(original.__name, original.__faculty, original.__ana_student, original.__spell)
 
 
 class Hogwarts:
@@ -181,16 +183,20 @@ class Hogwarts:
 
         return False
 
-    def simulate_duell(self, student_1: HogwardStudent, student_2: HogwardStudent) -> bool:
+    def try_simulate_duell(self, student_1: HogwardStudent, student_2: HogwardStudent) -> bool:
 
         if student_1 not in self.__students or student_2 not in self.__students:  return False
 
+        if student_1.get_mana() < con.EXPELLIARMUS or student_2.get_mana() < con.EXPELLIARMUS:
+            print(f'Не хватает маныЖ Студент1:{student_1.get_mana()}\nСтудент2:{student_2.get_mana()}')
+            return False
+
         while student_1.get_mana() >= con.EXPELLIARMUS and student_2.get_mana() >= con.EXPELLIARMUS:
 
-            student_1.try_cast_spell(student_2)
+            student_1.cast_spell(student_2)
 
             if student_2.get_mana() > con.EXPELLIARMUS:
-                student_2.try_cast_spell(student_1)
+                student_2.cast_spell(student_1)
 
         if student_1.get_mana() > student_2.get_mana():
             print(f'win student_1 {student_1.get_mana()} ')
@@ -204,36 +210,51 @@ class Hogwarts:
         return True
 
 
-s1 = Spell('хреновуха','сносит башку с чертям собачьим', 95 )
+expelliarmus = Spell('expelliarmus', 'лишает всех волов на теле и одежды', 15)
+stupefy = Spell('stupefy', 'удар пустым мешком по голове', 30)
+protego = Spell('protego', 'защита от заклинания посредством показа среднего пальца руки противнику', 20)
+avada_kedavra = Spell('avada_kedavrf', 'словестное унижение апонента, болинг, пока не расплачеться', 80)
 
-s2 = Spell('чертовуха', 'отрывает гениталии', 95)
-
-s3 = Spell('ваще злобная штука', "высасвает мозг которого нет", 95)
-
-c1 = HogwardStudent("Garri", "podlizerin", [s3])
-
-c2 = HogwardStudent("Глебати", "podlizerin", [s2])
-
-c3 = HogwardStudent("Germiona", "podlizerin", [s1])
-
-
-h = Hogwarts([c1,c2, c3], [s1, s2, s3])
-
-print(h)
+print(expelliarmus)
+print('='*20)
+print(stupefy)
+print('='*20)
+print(protego)
+print('='*20)
+print(avada_kedavra)
 print('='*20)
 
 
-d = h.simulate_duell(c1, c2)
-print(d)
+garri_potniy = HogwardStudent('garri potni', 'облизарин', [expelliarmus, stupefy, protego, avada_kedavra], 100)
+germiona = HogwardStudent("germiona", 'самвшокемизарин', [expelliarmus, stupefy, protego, avada_kedavra], 100)
+grizli = HogwardStudent('grizli', 'нифигасеблизарин', [expelliarmus, stupefy, protego, avada_kedavra], 100)
+
+print(garri_potniy)
+print('='*20)
+print(germiona)
+print('='*20)
+print(grizli)
 print('='*20)
 
-d2 = h.simulate_duell(c1, c3)
+
+
+
+h = Hogwarts([garri_potniy, germiona, grizli], [expelliarmus, stupefy, protego, avada_kedavra])
+
+
+d1 = h.try_simulate_duell(garri_potniy, germiona)
+print(d1)
+print('='*20)
+
+d2 = h.try_simulate_duell(grizli, germiona)
 print(d2)
 print('='*20)
 
-d3 = h.simulate_duell(c2, c3)
+d3 = h.try_simulate_duell(garri_potniy, grizli)
 print(d3)
 print('='*20)
+
+
 
 
 
