@@ -1,5 +1,5 @@
-import constants as con
 from __future__ import annotations
+import constants as con
 import random
 
 
@@ -61,17 +61,17 @@ class HogwardStudent:
     __spell: list[Spell]
 
 
-    def __init__(self, name: str, faculty: str, mana: int | float = con.PRIMALMANA, spell: list[Spell] = None):
+    def __init__(self, name: str, faculty: str, spell: list[Spell] = None):
 
         if not isinstance(name, str): raise TypeError()
         if not isinstance(faculty, str): raise TypeError()
-        if not isinstance(mana, (int, float)): raise TypeError()
         if not isinstance(spell, list): raise TypeError()
+
 
         self.__name = name
         self.__faculty = faculty
-        self.__mana = mana
         self.__spell = spell or []
+        self.__mana = con.PRIMALMANA
 
 
     def __str__(self):
@@ -103,7 +103,7 @@ class HogwardStudent:
         return True
 
 
-    def cast_spell(self, target: HogwardStudent) -> bool:
+    def try_cast_spell(self, target: HogwardStudent) -> bool:
 
         if not self.__spell:  return False
 
@@ -185,8 +185,79 @@ class Hogwarts:
 
         if student_1 not in self.__students or student_2 not in self.__students:  return False
 
-        if student_1.get_mana() < 10:  return False
-        if student_2.get_mana() < 10: return False
+        while student_1.get_mana() >= con.EXPELLIARMUS and student_2.get_mana() >= con.EXPELLIARMUS:
+
+            student_1.try_cast_spell(student_2)
+
+            if student_2.get_mana() > con.EXPELLIARMUS:
+                student_2.try_cast_spell(student_1)
+
+        if student_1.get_mana() > student_2.get_mana():
+            print(f'win student_1 {student_1.get_mana()} ')
+
+        elif student_2.get_mana() > student_1.get_mana():
+            print(f'win student_2 {student_2.get_mana()} ')
+
+        else:
+            print(f"Draw")
+
+        return True
+
+
+s1 = Spell('хреновуха','сносит башку с чертям собачьим', 95 )
+
+s2 = Spell('чертовуха', 'отрывает гениталии', 95)
+
+s3 = Spell('ваще злобная штука', "высасвает мозг которого нет", 95)
+
+c1 = HogwardStudent("Garri", "podlizerin", [s3])
+
+c2 = HogwardStudent("Глебати", "podlizerin", [s2])
+
+c3 = HogwardStudent("Germiona", "podlizerin", [s1])
+
+
+h = Hogwarts([c1,c2, c3], [s1, s2, s3])
+
+print(h)
+print('='*20)
+
+
+d = h.simulate_duell(c1, c2)
+print(d)
+print('='*20)
+
+d2 = h.simulate_duell(c1, c3)
+print(d2)
+print('='*20)
+
+d3 = h.simulate_duell(c2, c3)
+print(d3)
+print('='*20)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

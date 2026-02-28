@@ -4,6 +4,7 @@ MANANONE = None
 
 PRIMALMANA = 100
 
+MINMANA = 10
 
 COST = 20
 
